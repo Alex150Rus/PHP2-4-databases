@@ -29,53 +29,56 @@ abstract class Model implements IModel
     /* id = :id - :-плэйсхолдер, id - имя. Вместо него подстановится значение. Защита от sql инъекции, так как нельзя модифицировать
     sql запрос */
     $sql = "SELECT * FROM {$tableName} WHERE id = :id";
-    $class=$this->getClassName();
-    return $this->db->queryOne($sql, $class, [":id" => $id]);
+    return $this->db->queryObject($sql, get_called_class(), [":id" => $id])[0];
   }
 
   function getAll()
   {
     $tableName = $this->getTableName();
     $sql = "SELECT * FROM {$tableName}";
-    $class=$this->getClassName();
-    return $this->db->queryAll($sql, $class);
+    return $this->db->queryObject($sql, get_called_class());
   }
 
-  public function insert(){
-    $sql= $this->sqlInsert();
-    return $this->db->execute($sql);
+  function insert()
+  {
+    $params = [];
+    $columns = [];
+    foreach ($this as $key => $value) {
+      if ($key == 'id') {
+        continue;
+      }
+      if ($key == 'db') {
+        continue;
+      }
+      $params[":{$key}"] = "$value";
+      $columns[] = "{$key}";
+    }
+    $columns = implode(", ", $columns);
+    $placeholders = implode(", ", array_keys($params));
+    $tableName = $this->getTableName();
+    $sql = "INSERT INTO {$tableName} ({$columns}) VALUES ({$placeholders})";
+    $this->db->execute($sql, $params);
+    $this->id= $this->db->getLastInsertId();
   }
 
-  protected function sqlInsert(){
+   public function update()
+  {
     $arrayOfObjectProperties = (get_object_vars($this));
     array_pop($arrayOfObjectProperties);
-    $columns = implode(", ", array_keys($arrayOfObjectProperties));
-    $values = implode(", ", array_values($arrayOfObjectProperties));
-    $sql = "INSERT INTO {$this->getTableName()} ($columns) VALUES ($values)";
-    return $sql;
-  }
-
-  public function update() {
-  $sql = $this->sqlUpdate();
-    return $this->db->execute($sql);
-  }
-
-  protected function sqlUpdate(){
-    $arrayOfObjectProperties = (get_object_vars($this));
-    array_pop($arrayOfObjectProperties);
-    $id=$arrayOfObjectProperties['id'];
-    $expression= null;
-    foreach ($arrayOfObjectProperties as $key=>$value) {
-      $expression.="$key" . "=" . "$value, ";
+    $id = $arrayOfObjectProperties['id'];
+    $expression = null;
+    foreach ($arrayOfObjectProperties as $key => $value) {
+      $expression .= "$key" . "=" . "$value, ";
     }
     $sql = "UPDATE {$this->getTableName()} SET {$expression} WHERE id={$id}";
-    return $sql;
+    return $this->db->execute($sql);
   }
 
-  public function delete() {
-    $id=get_object_vars($this)['id'];
-    $sql = "DELETE FROM {$this->getTableName()} WHERE id={$id}";
-    return $this->db->execute($sql);
+  public function delete()
+  {
+    $tableName = $this->getTableName();
+    $sql = "DELETE FROM {$tableName} WHERE id = :id";
+    return $this->db->execute($sql, [":id" => $this->id]);
   }
 
 }

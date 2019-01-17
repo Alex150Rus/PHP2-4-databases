@@ -8,10 +8,15 @@ use app\models\Product;
 spl_autoload_register([new Autoloader(), 'loadClass']);
 
 $product1 = new Product();
-var_dump($product2 = $product1 ->getOne(5));
+
+$product1->name = 'Робот';
+
+
+$product1->price= 360;
+$product1->description="ss";
+$product1->vendor_id= 760;
 var_dump($product1);
-$product2->insert();
-var_dump($product2->update());
+$product1->insert();
 
 /**
  * Created by PhpStorm.
