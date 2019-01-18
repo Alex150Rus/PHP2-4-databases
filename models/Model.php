@@ -43,7 +43,7 @@ abstract class Model implements IModel
     $id = $this->id;
     if ($id === null) {
       $this->insert();
-    } elseif ($id !== null && $this != $this->getOne($id)) {
+    } elseif ($this != $this->getOne($id)) {
       $objFromDb =$this->getOne($id);
       $params = [];
       $expression = [];
