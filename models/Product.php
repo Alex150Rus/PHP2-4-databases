@@ -8,7 +8,7 @@
 
 namespace app\models;
 
-class Product extends Model
+class Product extends Record
 {
   public $id;
   public $name;
@@ -26,7 +26,7 @@ public function __construct($id = null, $name = null, $description = null, $pric
   $this->vendor_id=$vendor_id;
 }
 
-  public function getTableName(): string
+  static function getTableName(): string
   {
     return 'products';
   }

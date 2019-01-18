@@ -9,7 +9,7 @@
 namespace app\models;
 
 
-class Order extends Model
+class Order extends Record
 {
   public $id;
   public $user;

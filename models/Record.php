@@ -8,11 +8,11 @@
 
 namespace app\models;
 
-use app\interfaces\IModel;
+use app\interfaces\IRecord;
 use app\services\Db;
 
 
-abstract class Model implements IModel
+abstract class Record implements IRecord
 {
 
   protected $db;
@@ -22,21 +22,21 @@ abstract class Model implements IModel
     $this->db = Db::getInstance();
   }
 
-  function getOne(int $id)
+  static function getOne(int $id)
   {
-    $tableName = $this->getTableName();
+    $tableName = static::getTableName();
 
     /* id = :id - :-плэйсхолдер, id - имя. Вместо него подстановится значение. Защита от sql инъекции, так как нельзя модифицировать
     sql запрос */
     $sql = "SELECT * FROM {$tableName} WHERE id = :id";
-    return $this->db->queryObject($sql, get_called_class(), [":id" => $id])[0];
+    return Db::getInstance()->queryObject($sql, get_called_class(), [":id" => $id])[0];
   }
 
-  function getAll()
+  static function getAll()
   {
-    $tableName = $this->getTableName();
+    $tableName = static::getTableName();
     $sql = "SELECT * FROM {$tableName}";
-    return $this->db->queryObject($sql, get_called_class());
+    return Db::getInstance()->queryObject($sql, get_called_class());
   }
 
   public function save() {
@@ -60,9 +60,6 @@ abstract class Model implements IModel
     }
   }
 
-//UPDATE `shop-php`.`products` t SET t.`name` = 'клюква', t.`description` = '3в' WHERE t.`id` = 7
-// поэтому (int)($this->db->getLastInsertId()
-
   function insert()
   {
     $params = [];
@@ -76,7 +73,7 @@ abstract class Model implements IModel
     }
     $columns = implode(", ", $columns);
     $placeholders = implode(", ", array_keys($params));
-    $tableName = $this->getTableName();
+    $tableName = static::getTableName();
     $sql = "INSERT INTO {$tableName} ({$columns}) VALUES ({$placeholders})";
     $this->db->execute($sql, $params);
     $this->id = $this->db->getLastInsertId();
@@ -84,7 +81,7 @@ abstract class Model implements IModel
 
    public function update(array $params, array $expression)
   {
-    $tableName = $this->getTableName();
+    $tableName = static::getTableName();
     $expression = implode(", ",array_values($expression));
     $sql = "UPDATE {$tableName} SET {$expression} WHERE id= :id";
     var_dump($sql);
@@ -93,7 +90,7 @@ abstract class Model implements IModel
 
   public function delete()
   {
-    $tableName = $this->getTableName();
+    $tableName = static::getTableName();
     $sql = "DELETE FROM {$tableName} WHERE id = :id";
     return $this->db->execute($sql, [":id" => $this->id]);
   }

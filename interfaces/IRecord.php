@@ -9,13 +9,13 @@
 namespace app\interfaces;
 
 
-interface IModel
+interface IRecord
 {
-  function getOne(int $id);
+  static function getOne(int $id);
 
-  function getAll();
+  static function getAll();
 
-  function getTableName();
+  static function getTableName();
 
   function insert();
 }

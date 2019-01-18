@@ -7,14 +7,17 @@ use app\models\Product;
 
 spl_autoload_register([new Autoloader(), 'loadClass']);
 
-$product1 = new Product();
-$product1->name = '7инсерт';
-$product1->save();
+echo DEFAULT_CONTROLLER;
 
+$controllerName = ($_GET['c']) ?? DEFAULT_CONTROLLER;
+$actionName = (isset($_GET['a']) ? $_GET['a'] : 0);
 
-$product1->id=4;
-$product1->name = '150иzzнс';
-$product1->save();
+$controllerClass = CONTROLLER_NAMESPACE . ucfirst($controllerName) . "Controller";
+
+if (class_exists($controllerClass)){
+  $controller = new $controllerClass($actionName);
+  $controller->runAction($actionName);
+};
 
 
 
