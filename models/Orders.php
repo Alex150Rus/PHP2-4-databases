@@ -17,7 +17,7 @@ class Order extends Record
   public $orderJson;
   public $status;
 
-  public function getTableName(): string
+  static function getTableName(): string
   {
     return 'orders';
   }

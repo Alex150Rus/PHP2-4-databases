@@ -19,8 +19,6 @@ if (class_exists($controllerClass)){
   $controller->runAction($actionName);
 };
 
-
-
 /**
  * Created by PhpStorm.
  * User: Alex1
