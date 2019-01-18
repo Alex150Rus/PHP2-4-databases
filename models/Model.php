@@ -49,12 +49,13 @@ abstract class Model implements IModel
       $expression = [];
       foreach ($this as $key => $value) {
         foreach ($objFromDb as $dbKey => $dbValue) {
-         if ($key == $dbKey && $key!= 'db') {
+         if ($key == $dbKey && $key!= 'db' && $value !=$dbValue) {
           $params[":{$key}"] = $value;
           $expression[] = "$key = :$key";
          }
         }
       }
+      $params[":id"] = $id;
       $this->update($params, $expression);
     }
   }
@@ -86,6 +87,7 @@ abstract class Model implements IModel
     $tableName = $this->getTableName();
     $expression = implode(", ",array_values($expression));
     $sql = "UPDATE {$tableName} SET {$expression} WHERE id= :id";
+    var_dump($sql);
     return $this->db->execute($sql, $params);
   }
 

@@ -13,7 +13,7 @@ $product1->save();
 
 
 $product1->id=4;
-$product1->name = '8иzzнс';
+$product1->name = '110иzzнс';
 $product1->save();
 
 
