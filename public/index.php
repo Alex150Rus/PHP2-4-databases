@@ -8,15 +8,15 @@ use app\models\Product;
 spl_autoload_register([new Autoloader(), 'loadClass']);
 
 $product1 = new Product();
+$product1->name = '7инсерт';
+$product1->save();
 
-$product1->name = 'Робот';
+
+$product1->id=4;
+$product1->name = '8иzzнс';
+$product1->save();
 
 
-$product1->price= 360;
-$product1->description="ss";
-$product1->vendor_id= 760;
-var_dump($product1);
-$product1->insert();
 
 /**
  * Created by PhpStorm.
@@ -24,3 +24,4 @@ $product1->insert();
  * Date: 10.01.2019
  * Time: 23:04
  */
+

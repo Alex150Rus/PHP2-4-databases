@@ -51,8 +51,6 @@ class Db implements IDb
     $pdoStatement = $this->getConnection()->prepare($sql);
 
     $pdoStatement->execute($params);
-    var_dump($sql);
-    var_dump($pdoStatement);
     return $pdoStatement;
   }
 
@@ -68,7 +66,7 @@ class Db implements IDb
 
   public function execute(string $sql, array $params = [])
   {
-    var_dump($this->query($sql, $params));
+  $this->query($sql, $params);
     return true;
   }
 
