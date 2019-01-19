@@ -36,22 +36,6 @@ abstract class Controller
     }
   }
 
-  //дефолтный экшн - рисует каталог
-  public function actionIndex() {
-    echo "catalog";
-  }
-
-  //рисует карточку товара
-  public function actionCard() {
-    // для этого метода не применяем статическую часть сайта
-    $this->useLayout=false;
-    //получаем id us url (прилетит туда гет запросом)
-    $id = $_GET['id'];
-    //создаём необходимую сущность для отрисовки, вытаскивая нужную инфу из БД
-    $product = Product::getOne($id);
-    // отправляем на отрисовку
-    echo $this->render("card", ['product'=>$product]);
-  }
   //метод для отрисовки принимает имя вьюхи и массив с параметрами
   protected function render($template, $params=[]) {
     //проверяем использовать статическуб часть сайта или нет
